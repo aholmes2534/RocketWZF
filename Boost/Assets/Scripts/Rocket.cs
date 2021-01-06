@@ -22,7 +22,10 @@ public class Rocket : MonoBehaviour
     {
         if (Input.GetKey(KeyCode.Space)) // thrust (while rotating too)
         {
+            AudioSource audioSource=GetComponent<AudioSource>();
             rigidBody.AddRelativeForce(Vector3.up);
+            if(!audioSource.isPlaying)
+                audioSource.Play();
         }
 
         if (Input.GetKey(KeyCode.A))
