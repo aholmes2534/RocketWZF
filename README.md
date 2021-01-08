@@ -1,2 +1,2 @@
 # Project Boost
- Game developed using Unity, following a Udemy course.
+ Game developed using Unity, while improvising on a Udemy course.
