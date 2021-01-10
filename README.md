@@ -1,2 +1,2 @@
 # Project Boost
- Game developed using Unity, while improvising on a Udemy course.
+A hobby project meant to hone my Unity skills and to have some fun!
