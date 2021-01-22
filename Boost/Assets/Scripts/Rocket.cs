@@ -12,36 +12,48 @@ public class Rocket : MonoBehaviour
     private State state = State.Alive;
     [SerializeField] private float rcsThrust = 100f;
     [SerializeField] private float mainThrust = 100f;
+    [SerializeField] AudioClip mainEngine , deathSFX, successSFX;
 
-    // Start is called before the first frame update
-    private void Start()
+   
+    private void Start() //used to initialize stuff
     {
         rigidBody = GetComponent<Rigidbody>();
+        audioSource = GetComponent<AudioSource>();
     }
 
-    // Update is called once per frame
+   
     private void Update()
     {
         //TODO: stop sound on death
         if (state == State.Alive)
         {
-            Thrust();
-            Rotate();
+            GetThrustInput();
+            GetRotateInput();
         }
     }
 
-    private void Thrust()
+    private void GetThrustInput()
     {
+        
         if (Input.GetKey(KeyCode.Space)) // thrust (while rotating too)
         {
-            audioSource = GetComponent<AudioSource>();
-            rigidBody.AddRelativeForce(Vector3.up * mainThrust);
-            if (!audioSource.isPlaying)
-                audioSource.Play();
+            
+            ApplyThrust(audioSource);
+        }
+        else
+        {
+            audioSource.Stop();
         }
     }
 
-    private void Rotate()
+    private void ApplyThrust(AudioSource audioSource) //applies thrust with sound
+    {
+        rigidBody.AddRelativeForce(Vector3.up * mainThrust);
+        if (!audioSource.isPlaying)
+            audioSource.PlayOneShot(mainEngine);
+    }
+
+    private void GetRotateInput()
     {
         float rotationSpeed = rcsThrust * Time.deltaTime;
         rigidBody.freezeRotation = true; //manual control of the rotation
@@ -66,27 +78,30 @@ public class Rocket : MonoBehaviour
         switch (collision.gameObject.tag)
         {
             case "Friendly":
-
+                //do nothing
                 break;
 
             case "Finish":
                 state = State.Transcending;
+                audioSource.Stop();
+                audioSource.PlayOneShot(successSFX);
                 Invoke("LoadNextScene", 1f); //TODO: parameterise time
                 break;
 
             default:
                 state = State.Dying;
+                audioSource.Stop();
+                audioSource.PlayOneShot(deathSFX);
                 Invoke("LoadOnDeath", 1f);
                 break;
         }
     }
 
-    private void LoadNextScene()
+    private void LoadNextScene() //loads the next level in queue
     {
         SceneManager.LoadScene(1); //TODO : appply to n levels.
     }
-
-    private void LoadOnDeath()
+    private void LoadOnDeath() //loads level 1
     {
         SceneManager.LoadScene(0);
     }

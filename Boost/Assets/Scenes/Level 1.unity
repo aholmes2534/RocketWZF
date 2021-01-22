@@ -734,6 +734,11 @@ PrefabInstance:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+    - target: {fileID: 5474966217017421644, guid: ecb75547f5aac1448983a4a3a0ea7edb,
+        type: 3}
+      propertyPath: m_audioClip
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 6678854964360934700, guid: ecb75547f5aac1448983a4a3a0ea7edb,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
