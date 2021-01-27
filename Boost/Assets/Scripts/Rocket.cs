@@ -12,20 +12,18 @@ public class Rocket : MonoBehaviour
     private State state = State.Alive;
     [SerializeField] private float rcsThrust = 100f;
     [SerializeField] private float mainThrust = 100f;
-    [SerializeField] AudioClip mainEngine , deathSFX, successSFX;
-    [SerializeField] ParticleSystem engineParticles, successParticles, deathParticles;
+    [SerializeField] private float levelLoadDelay = 2f;
+    [SerializeField] private AudioClip mainEngine, deathSFX, successSFX;
+    [SerializeField] private ParticleSystem engineParticles, successParticles, deathParticles;
 
-   
-    private void Start() //used to initialize stuff
+    private void Start()
     {
         rigidBody = GetComponent<Rigidbody>();
         audioSource = GetComponent<AudioSource>();
     }
 
-   
     private void Update()
     {
-        
         if (state == State.Alive)
         {
             GetThrustInput();
@@ -35,11 +33,8 @@ public class Rocket : MonoBehaviour
 
     private void GetThrustInput()
     {
-        
-        
         if (Input.GetKey(KeyCode.Space)) // thrust (while rotating too)
         {
-            
             ApplyThrust(audioSource);
         }
         else
@@ -51,16 +46,14 @@ public class Rocket : MonoBehaviour
 
     private void ApplyThrust(AudioSource audioSource) //applies thrust with sound
     {
-        rigidBody.AddRelativeForce(Vector3.up * mainThrust* Time.deltaTime);
+        rigidBody.AddRelativeForce(Vector3.up * mainThrust * Time.deltaTime);
         if (!audioSource.isPlaying)
             audioSource.PlayOneShot(mainEngine);
 
         if (!engineParticles.isPlaying)
         {
-            Debug.Log("work");
             engineParticles.Play();
         }
-        
     }
 
     private void GetRotateInput()
@@ -96,7 +89,7 @@ public class Rocket : MonoBehaviour
                 audioSource.Stop();
                 audioSource.PlayOneShot(successSFX);
                 successParticles.Play();
-                Invoke("LoadNextScene", 1f); //TODO: parameterise time
+                Invoke("LoadNextScene", levelLoadDelay);
                 break;
 
             default:
@@ -104,7 +97,7 @@ public class Rocket : MonoBehaviour
                 audioSource.Stop();
                 audioSource.PlayOneShot(deathSFX);
                 deathParticles.Play();
-                Invoke("LoadOnDeath", 1f);
+                Invoke("LoadOnDeath", levelLoadDelay);
                 break;
         }
     }
@@ -113,6 +106,7 @@ public class Rocket : MonoBehaviour
     {
         SceneManager.LoadScene(1); //TODO : appply to n levels.
     }
+
     private void LoadOnDeath() //loads level 1
     {
         SceneManager.LoadScene(0);
